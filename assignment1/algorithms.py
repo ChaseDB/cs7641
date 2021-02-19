@@ -54,6 +54,7 @@ HYPERPARAMS = {
             "hidden_layers": (50, 50),
             "learning_rate": 'adaptive',
             "alpha": .0005,  # 1e-5
+            "learning_rate_init": .01
         }
     },
     "cardio":
@@ -90,6 +91,7 @@ HYPERPARAMS = {
                 "hidden_layers": (50,50),
                 "learning_rate": 'constant',
                 "alpha": .5, #1e-5
+                "learning_rate_init": .4
             }
         },
 }
@@ -810,7 +812,7 @@ def neural_network_experiment(dataset, hparams, output_fn_base):
     # print('Best parameters found:\n', clf.best_params_)
 
 
-    nn_clf = MLPClassifier(solver=hparams["solver"], alpha=hparams["alpha"],hidden_layer_sizes=hparams["hidden_layers"], max_iter=hparams["epochs"], activation=hparams["activation"], early_stopping=True, learning_rate=hparams["learning_rate"])
+    nn_clf = MLPClassifier(solver=hparams["solver"], alpha=hparams["alpha"],hidden_layer_sizes=hparams["hidden_layers"], max_iter=hparams["epochs"], activation=hparams["activation"], early_stopping=True, learning_rate=hparams["learning_rate"], learning_rate_init= hparams["learning_rate_init"])
 
     # learning curve
     cv = ShuffleSplit(n_splits=100, test_size=0.2)
@@ -842,7 +844,7 @@ def neural_network_experiment(dataset, hparams, output_fn_base):
     for a in alphas:
         nn_clf = MLPClassifier(solver=hparams["solver"], alpha=a,
                                hidden_layer_sizes=hparams["hidden_layers"], max_iter=hparams["epochs"],
-                               activation=hparams["activation"], early_stopping=True, learning_rate=hparams["learning_rate"])
+                               activation=hparams["activation"], early_stopping=True, learning_rate=hparams["learning_rate"] , learning_rate_init= hparams["learning_rate_init"])
 
         nn_clf.fit(X_train, y_train)
 
@@ -871,7 +873,7 @@ def neural_network_experiment(dataset, hparams, output_fn_base):
         nn_clf = MLPClassifier(solver=hparams["solver"], alpha=hparams["alpha"],
                                hidden_layer_sizes=layer, max_iter=hparams["epochs"],
                                activation=hparams["activation"], early_stopping=True,
-                               learning_rate=hparams["learning_rate"])
+                               learning_rate=hparams["learning_rate"], learning_rate_init= hparams["learning_rate_init"])
 
         nn_clf.fit(X_train, y_train)
 
@@ -888,6 +890,39 @@ def neural_network_experiment(dataset, hparams, output_fn_base):
     ax.legend()
     plt.savefig("%s/NN/nn_layer_%s" % (output_fn_base, output_fn_base))
     plt.close()
+
+
+
+
+    ##################################
+    # learning rate metric
+
+    learning_rates = [.0001,.0005,.001,.005,.01,.05,.1,.5,.6,.7,.8,.9]
+
+    scores_test = []
+    scores_train = []
+    for rate in learning_rates:
+        nn_clf = MLPClassifier(solver=hparams["solver"], alpha=hparams["alpha"],
+                               hidden_layer_sizes=hparams["hidden_layers"], max_iter=hparams["epochs"],
+                               activation=hparams["activation"], early_stopping=True, learning_rate=hparams["learning_rate"], learning_rate_init= rate)
+
+        nn_clf.fit(X_train, y_train)
+
+        scores_test.append(nn_clf.score(X_test, y_test))
+        scores_train.append(nn_clf.score(X_train, y_train))
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel("Learning Rate")
+    ax.set_ylabel("accuracy")
+    ax.set_title("Impact of changing learning rate - NN")
+    ax.plot(learning_rates, scores_test, label="Out-Of-Sample")
+    ax.plot(learning_rates, scores_train, label="In-Sample")
+
+    ax.legend()
+    plt.savefig("%s/NN/nn_learningrate_%s" % (output_fn_base, output_fn_base))
+    plt.close()
+
+
 
     logs.append("\tHyperparameters: \n")
     logs.append("\t%s" % str(hparams))
