@@ -66,7 +66,7 @@ def get_datasets():
 
     set_B.dropna(inplace=True)
     return {
-               #"shill": {"all": set_A, "features": set_A.drop(["Class"], axis=1), "class": set_A["Class"]},
+               "shill": {"all": set_A, "features": set_A.drop(["Class"], axis=1), "class": set_A["Class"]},
                "cardio": {"all": set_B, "features": set_B.drop(["Class"], axis=1), "class": set_B["Class"]-1},
            }, files
 
