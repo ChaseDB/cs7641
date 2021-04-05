@@ -147,6 +147,31 @@ def kmeans_experiment(dataset, hparams, output_fn_base):
         cluster_labels_by_num_component.append(labels)# used to handle the following:
         # When you reproduced your clustering experiments on the datasets projected onto the new spaces created by ICA,
         # PCA, and RP, did you get the same clusters as before? Different clusters? Why? Why not?
+        if(output_fn_base == "shill" and k == 5):
+            lab = pd.DataFrame(kmeans.labels_).assign(dfclass=dataset["class"]).to_numpy()
+            counts = [[],[]]
+            for i in range(0,k):
+                lab_temp = lab[lab[:, 0] == i]
+                counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+            pd.DataFrame(np.array(counts)).to_csv("counts_shill_kmeans.csv")
+
+        if(output_fn_base == "cardio" and k == 7):
+            lab = pd.DataFrame(kmeans.labels_).assign(dfclass=dataset["class"]).to_numpy()
+            counts = [[],[],[],[],[],[],[],[],[],[]]
+            for i in range(0,k):
+                lab_temp = lab[lab[:, 0] == i]
+                counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+                counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+            pd.DataFrame(np.array(counts)).to_csv("counts_cardio_kmeans.csv")
         if k >= 4 and k <=7:
             clusters_for_silhouette.append(kmeans)
 
@@ -228,7 +253,33 @@ def em_experiment(dataset, hparams, output_fn_base):
         cluster_labels_by_num_component.append(predicted) # used to handle the following:
         # When you reproduced your clustering experiments on the datasets projected onto the new spaces created by ICA,
         # PCA, and RP, did you get the same clusters as before? Different clusters? Why? Why not?
+        if(output_fn_base == "shill" and component_num == 8):
+            #pd.DataFrame(predicted).to_csv("./shill_em.csv",index=False)
+            lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+            counts = [[],[]]
+            for i in range(0,component_num):
+                lab_temp = lab[lab[:, 0] == i]
+                counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+            pd.DataFrame(np.array(counts)).to_csv("counts_shill_em.csv")
 
+        if(output_fn_base == "cardio" and component_num == 5):
+            # pd.DataFrame(predicted).to_csv("./cardio_em.csv",index=False)
+            lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+            counts = [[], [], [], [], [], [], [], [], [], []]
+            for i in range(0, component_num):
+                lab_temp = lab[lab[:, 0] == i]
+                counts[0].append(len(lab_temp[lab_temp[:, 1] == 0]))
+                counts[1].append(len(lab_temp[lab_temp[:, 1] == 1]))
+                counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+            pd.DataFrame(np.array(counts)).to_csv("counts_cardio_em.csv")
     metrics_dictionary["em_fit_times"] = fit_times
     metrics_dictionary["em_silhouette"] = silhouette_scores
     metrics_dictionary["em_db"] = db_scores
@@ -391,6 +442,34 @@ def pca_experiment(dataset, output_fn_base, perform_clustering=False, best_compo
             aic_scores.append(gm.aic(new_x))
             db_scores.append(davies_bouldin_score(new_x, predicted))
             gm_labels_by_k.append(predicted)
+
+            if(output_fn_base == "shill" and component_num == 4):
+                #pd.DataFrame(predicted).to_csv("./shill_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[],[]]
+                for i in range(0,component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_shill_pca_4_em.csv")
+
+            if(output_fn_base == "cardio" and component_num == 4):
+                # pd.DataFrame(predicted).to_csv("./cardio_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[], [], [], [], [], [], [], [], [], []]
+                for i in range(0, component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:, 1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:, 1] == 1]))
+                    counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                    counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                    counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                    counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                    counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                    counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                    counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                    counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_cardio_pca_4_em.csv")
 
             # save data with features, let clusters be new class column (for part 5):
             # pd.DataFrame(new_x).assign(dfclass=predicted).to_csv("./%s/EM/EM_%s_%d.csv" % (output_fn_base, output_fn_base, component_num),  index=False)
@@ -670,6 +749,34 @@ def ica_experiment(dataset, output_fn_base, perform_clustering=False, best_compo
             cluster_to_features(dataset["class"], predicted,
                             "./%s/EM/ICA/EM%s_%d.csv" % (output_fn_base, output_fn_base, component_num))
 
+            if(output_fn_base == "shill" and component_num == 8):
+                #pd.DataFrame(predicted).to_csv("./shill_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[],[]]
+                for i in range(0,component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_shill_ica_8_em.csv")
+
+            if(output_fn_base == "cardio" and component_num == 9):
+                # pd.DataFrame(predicted).to_csv("./cardio_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[], [], [], [], [], [], [], [], [], []]
+                for i in range(0, component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:, 1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:, 1] == 1]))
+                    counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                    counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                    counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                    counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                    counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                    counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                    counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                    counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_cardio_ica_9_em.csv")
+
         main_gm_aic_scores.append(aic_scores)
         main_gm_bic_scores.append(bic_scores)
         main_gm_db_scores.append(db_scores)
@@ -875,6 +982,34 @@ def rp_experiment(dataset, output_fn_base, perform_clustering=False, best_compon
             cluster_to_features(dataset["class"], predicted,
                             "./%s/EM/RP/EM%s_%d.csv" % (output_fn_base, output_fn_base, component_num))
 
+            if(output_fn_base == "shill" and component_num == 3):
+                #pd.DataFrame(predicted).to_csv("./shill_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[],[]]
+                for i in range(0,component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_shill_rp_3_em.csv")
+
+            if(output_fn_base == "cardio" and component_num == 5):
+                # pd.DataFrame(predicted).to_csv("./cardio_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[], [], [], [], [], [], [], [], [], []]
+                for i in range(0, component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:, 1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:, 1] == 1]))
+                    counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                    counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                    counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                    counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                    counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                    counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                    counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                    counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_cardio_rp_5_em.csv")
+
         main_gm_aic_scores.append(aic_scores)
         main_gm_bic_scores.append(bic_scores)
         main_gm_db_scores.append(db_scores)
@@ -1066,7 +1201,33 @@ def fa_experiment(dataset, output_fn_base, perform_clustering=False, return_data
             cluster_to_features(dataset["class"], predicted,
                                 "./%s/EM/FA/EM%s_%d.csv" % (output_fn_base, output_fn_base, component_num))
             #pd.DataFrame(new_x).assign(dfclass=predicted).to_csv("./%s/EM/EM_%s_%d.csv" % (output_fn_base, output_fn_base, component_num),  index=False)
+            if(output_fn_base == "shill" and component_num == 5):
+                #pd.DataFrame(predicted).to_csv("./shill_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[],[]]
+                for i in range(0,component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:,1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:,1] == 1]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_shill_fa_5_em.csv")
 
+            if(output_fn_base == "cardio" and component_num == 5):
+                # pd.DataFrame(predicted).to_csv("./cardio_em.csv",index=False)
+                lab = pd.DataFrame(predicted).assign(dfclass=dataset["class"]).to_numpy()
+                counts = [[], [], [], [], [], [], [], [], [], []]
+                for i in range(0, component_num):
+                    lab_temp = lab[lab[:, 0] == i]
+                    counts[0].append(len(lab_temp[lab_temp[:, 1] == 0]))
+                    counts[1].append(len(lab_temp[lab_temp[:, 1] == 1]))
+                    counts[2].append(len(lab_temp[lab_temp[:, 1] == 2]))
+                    counts[3].append(len(lab_temp[lab_temp[:, 1] == 3]))
+                    counts[4].append(len(lab_temp[lab_temp[:, 1] == 4]))
+                    counts[5].append(len(lab_temp[lab_temp[:, 1] == 5]))
+                    counts[6].append(len(lab_temp[lab_temp[:, 1] == 6]))
+                    counts[7].append(len(lab_temp[lab_temp[:, 1] == 7]))
+                    counts[8].append(len(lab_temp[lab_temp[:, 1] == 8]))
+                    counts[9].append(len(lab_temp[lab_temp[:, 1] == 9]))
+                pd.DataFrame(np.array(counts)).to_csv("counts_cardio_fa_5_em.csv")
         fa_gm_labels_by_dim.append(gm_labels_by_k)
 
         main_gm_aic_scores.append(aic_scores)
